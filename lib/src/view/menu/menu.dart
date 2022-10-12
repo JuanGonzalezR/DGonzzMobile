@@ -16,6 +16,7 @@ class ViewMenu extends StatelessWidget {
           const FondoBase3(),
           Positioned(left: rsp.wp(35), top: rsp.hp(6),child: const TitleMenu()),
           Positioned(left: rsp.wp(5), top: rsp.hp(16),child: const TitleMenuWithLogo()),
+          Positioned(left: rsp.wp(5), top: rsp.hp(28),child: const TableMenuOptions()),
         ],
       ),
     );
