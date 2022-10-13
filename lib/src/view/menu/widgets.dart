@@ -102,6 +102,42 @@ class TitleMenu extends StatelessWidget {
 
 //******************************************************************************************************************** */
 
+class TitleMenu2 extends StatelessWidget {
+  const TitleMenu2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text('Performance',
+          style: TextStyle(
+              fontSize: 25,
+              fontFamily: 'chubby',
+              color: Color.fromARGB(125, 0, 0, 0))),
+    );
+  }
+}
+
+//******************************************************************************************************************** */
+
+class TitleMenu3 extends StatelessWidget {
+  const TitleMenu3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text('Material Desing',
+          style: TextStyle(
+              fontSize: 25,
+              fontFamily: 'chubby',
+              color: Color.fromARGB(125, 0, 0, 0))),
+    );
+  }
+}
+
+//******************************************************************************************************************** */
+
 class TitleMenuWithLogo extends StatelessWidget {
   const TitleMenuWithLogo({super.key});
 
@@ -273,6 +309,95 @@ class DesingCardView extends StatelessWidget {
 
 //******************************************************************************************************************** */
 
+class DesingCardViewCircle extends StatelessWidget {
+
+  final Color color;
+  final String routeImg;
+  final String title;
+
+  const DesingCardViewCircle({super.key, required this.color, required this.routeImg, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final rsp = Responsive(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        color: color,
+      shape: const StadiumBorder(
+        side: BorderSide(
+          color: Color.fromARGB(0, 255, 255, 255),
+        ),
+      ),
+        elevation: 10,
+        child: Stack(
+          children: [
+            Container(
+              width: rsp.wp(23),
+              height: rsp.wp(26),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(181, 255, 255, 255),
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+            ),
+            Positioned(
+              width: rsp.wp(24),
+              child: Column(
+                children: [
+                  Container(
+                    width: rsp.wp(11),
+                    height: rsp.wp(11),
+                    margin: const EdgeInsets.only(top: 15),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: Container(
+                      margin: const EdgeInsets.all(5),
+                      child: Image.asset(
+                        routeImg,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
+                  Text(title,
+                      style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                          fontFamily: 'rimouski')),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//******************************************************************************************************************** */
+
+class ListViewHorizontal extends StatelessWidget {
+  const ListViewHorizontal({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final rsp = Responsive(context);
+    return  SizedBox(
+      width: rsp.wp(90),
+      height: rsp.hp(16),
+      child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  DesingCardViewCircle(color: Colors.red, title: 'Button',routeImg: 'asset/image/button.png'),
+                  DesingCardViewCircle(color: Colors.greenAccent, title: 'Text',routeImg: 'asset/image/text.png'),
+                  DesingCardViewCircle(color: Colors.blueGrey, title: 'Check',routeImg: 'asset/image/check.png'),
+                ],
+      ),
+    );
+  }
+}
+
+//******************************************************************************************************************** */
+
 class TableMenuOptions extends StatelessWidget {
   const TableMenuOptions({super.key});
 
@@ -293,7 +418,8 @@ class TableMenuOptions extends StatelessWidget {
               },
               routeImg: 'asset/image/firebase.png',
               title: 'Firebase',
-              subtitle: 'Cloud platform for web and mobile application development',
+              subtitle:
+                  'Cloud platform for web and mobile application development',
               description: ''),
           DesingCardView(
               color: const Color.fromARGB(200, 255, 82, 82),
@@ -322,7 +448,8 @@ class TableMenuOptions extends StatelessWidget {
               },
               routeImg: 'asset/image/bd.png',
               title: 'SQLite',
-              subtitle: 'Stand-alone, highly reliable, embedded SQL database engine',
+              subtitle:
+                  'Stand-alone, highly reliable, embedded SQL database engine',
               description: '')
         ])
       ],
