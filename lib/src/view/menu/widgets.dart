@@ -127,7 +127,7 @@ class TitleMenu3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text('Material Desing',
+      child: Text('Material Design',
           style: TextStyle(
               fontSize: 25,
               fontFamily: 'chubby',
@@ -324,7 +324,8 @@ class DesingCardViewCircle extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Card(
         color: color,
-      shape: const StadiumBorder(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         side: BorderSide(
           color: Color.fromARGB(0, 255, 255, 255),
         ),
@@ -337,7 +338,7 @@ class DesingCardViewCircle extends StatelessWidget {
               height: rsp.wp(26),
               decoration: const BoxDecoration(
                   color: Color.fromARGB(181, 255, 255, 255),
-                  borderRadius: BorderRadius.all(Radius.circular(50))),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
             ),
             Positioned(
               width: rsp.wp(24),
@@ -346,7 +347,7 @@ class DesingCardViewCircle extends StatelessWidget {
                   Container(
                     width: rsp.wp(11),
                     height: rsp.wp(11),
-                    margin: const EdgeInsets.only(top: 15),
+                    margin: const EdgeInsets.only(top: 15.5),
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -383,7 +384,7 @@ class ListViewHorizontal extends StatelessWidget {
     final rsp = Responsive(context);
     return  SizedBox(
       width: rsp.wp(90),
-      height: rsp.hp(16),
+      height: rsp.hp(15.5),
       child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: const [

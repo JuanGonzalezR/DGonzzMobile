@@ -6,10 +6,11 @@ void main() {
   runApp(MaterialApp(
     home: const ViewLogin(),
     debugShowCheckedModeBanner: false,
-    initialRoute: routesFromInit.routeMenu,
+    initialRoute: routesFromInit.routeMenuFirebase,
     routes: {
       routesFromInit.routeLogin: (_) => const ViewLogin(),
-      routesFromInit.routeMenu: (_) => const ViewMenu(),
+      routesFromInit.routeMenu: (_) => const ViewMenu(), 
+      routesFromInit.routeMenuFirebase: (_) => const ViewMenuFirebase(),
     },
   ));
 }
