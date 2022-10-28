@@ -415,6 +415,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 255, 214, 64),
               onTap: () {
+                Navigator.pushNamed(context, routesFromInit.routeMenuFirebase);
                 debugPrint('First Button');
               },
               routeImg: 'asset/image/firebase.png',

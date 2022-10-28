@@ -6,7 +6,7 @@ void main() {
   runApp(MaterialApp(
     home: const ViewLogin(),
     debugShowCheckedModeBanner: false,
-    initialRoute: routesFromInit.routeMenuFirebase,
+    initialRoute: routesFromInit.routeLogin,
     routes: {
       routesFromInit.routeLogin: (_) => const ViewLogin(),
       routesFromInit.routeMenu: (_) => const ViewMenu(), 

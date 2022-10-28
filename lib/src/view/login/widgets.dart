@@ -365,7 +365,9 @@ class MyButtonLogin extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               textStyle: const TextStyle(fontSize: 20),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, routesFromInit.routeMenu);
+            },
             child: const Text('Continue', style: TextStyle(fontFamily: 'Comfortaa-Light'),),
           ),
         ],
