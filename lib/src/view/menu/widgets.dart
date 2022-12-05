@@ -426,6 +426,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 255, 82, 82),
               onTap: () {
+                Navigator.pushNamed(context, routesFromInit.routeMenuApi);
                 debugPrint('Second Button');
               },
               routeImg: 'asset/image/api.png',
@@ -437,6 +438,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 105, 240, 175),
               onTap: () {
+                Navigator.pushNamed(context, routesFromInit.routeMenuBloc);
                 debugPrint('Third Button');
               },
               routeImg: 'asset/image/bloc.png',
@@ -446,6 +448,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 68, 137, 255),
               onTap: () {
+                Navigator.pushNamed(context, routesFromInit.routeMenuSql);
                 debugPrint('Fourth Button');
               },
               routeImg: 'asset/image/bd.png',

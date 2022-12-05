@@ -11,6 +11,9 @@ void main() {
       routesFromInit.routeLogin: (_) => const ViewLogin(),
       routesFromInit.routeMenu: (_) => const ViewMenu(), 
       routesFromInit.routeMenuFirebase: (_) => const ViewMenuFirebase(),
+      routesFromInit.routeMenuApi: (_) => const ViewMenuApi(),
+      routesFromInit.routeMenuBloc: (_) => const ViewMenuBloc(),
+      routesFromInit.routeMenuSql: (_) => const ViewMenuSql(),
     },
   ));
 }
