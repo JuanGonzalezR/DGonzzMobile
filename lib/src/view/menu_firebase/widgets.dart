@@ -96,6 +96,7 @@ class SearchContainer extends StatelessWidget {
               children: const [
                 Expanded(
                   child: TextField(
+                    style: TextStyle(color: Colors.black54, fontFamily: 'Comfortaa-Light', fontSize: 20),
                     decoration: InputDecoration(
                         labelText: 'Search ...',
                         labelStyle: TextStyle(color: Colors.black38),
@@ -183,11 +184,11 @@ class ListViewData extends StatelessWidget {
                     backgroundColor: const Color.fromARGB(255, 211, 211, 211),
                     child: Text(
                       items[i],
-                      style: const TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black87, fontFamily: 'Comfortaa-Light'),
                     ),
                   ),
-                  title: Text('Item ${items[i]}'),
-                  subtitle: const Text('Item description'),
+                  title: Text('Task ${items[i]}', style: const TextStyle(color: Colors.black54, fontFamily: 'Comfortaa-Bold', fontSize: 15),),
+                  subtitle: const Text('Task description', style: TextStyle(color: Colors.black54, fontFamily: 'Comfortaa-Light', fontSize: 10)),
                   trailing: const Icon(Icons.cleaning_services),
                   onTap: () {},
                 ),
@@ -206,6 +207,7 @@ class BottonCreateNewRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rsp = Responsive(context);
+    final act = FirebaseService();
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: ClipOval(
@@ -216,7 +218,7 @@ class BottonCreateNewRegister extends StatelessWidget {
             maxRadius: 30,
             child: IconButton(
                 onPressed: () {
-                  bottonSheetNewRegister(context, rsp);
+                  bottonSheetNewRegister(context, rsp, act);
                 },
                 icon: const Icon(
                   Icons.add_circle_sharp,
@@ -229,7 +231,7 @@ class BottonCreateNewRegister extends StatelessWidget {
     );
   }
 
-  Future<dynamic> bottonSheetNewRegister(BuildContext context, Responsive rsp) {
+  Future<dynamic> bottonSheetNewRegister(BuildContext context, Responsive rsp, FirebaseService act) {
     return showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
@@ -249,20 +251,23 @@ class BottonCreateNewRegister extends StatelessWidget {
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Column(
                       children: [
-                        const Center(
-                          child: Text(
-                            'New Register',
-                            style: TextStyle(
-                                fontFamily: 'Comfortaa-Bold',
-                                fontSize: 30,
-                                color: Colors.black54),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Register the task here',
+                              style: TextStyle(
+                                  fontFamily: 'Comfortaa-Bold',
+                                  fontSize: 18,
+                                  color: Colors.black54),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: rsp.dp(5)),
                         DesignTextField(
-                            "example",
-                            'Dato 1',
-                            Icons.dark_mode_sharp,
+                            "",
+                            'Task name',
+                            Icons.tips_and_updates_rounded,
                             Colors.white,
                             const Color.fromARGB(255, 211, 211, 211),
                             Colors.white,
@@ -271,11 +276,11 @@ class BottonCreateNewRegister extends StatelessWidget {
                             TextInputType.emailAddress,
                             'Comfortaa-Light',
                             false),
-                        SizedBox(height: rsp.dp(4)),
+                        SizedBox(height: rsp.dp(2)),
                         DesignTextField(
-                            "example",
-                            'Dato 2',
-                            Icons.dark_mode_sharp,
+                            "",
+                            'Task description',
+                            Icons.description,
                             Colors.white,
                             const Color.fromARGB(255, 211, 211, 211),
                             Colors.white,
@@ -284,12 +289,19 @@ class BottonCreateNewRegister extends StatelessWidget {
                             TextInputType.emailAddress,
                             'Comfortaa-Light',
                             false),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                final ent = EntExportActivity(
+                                  actName: 'Play Soccer',
+                                  actDescription: 'I really love to play soccer at the park with my friends in the afternoon',
+                                  actStatus: 'Realice'
+                                );
+                                act.createActivity(ent);
+                              },
                               style: ElevatedButton.styleFrom(
                                 elevation: 4,
                                 shape: RoundedRectangleBorder(
@@ -302,7 +314,7 @@ class BottonCreateNewRegister extends StatelessWidget {
                                 child: Text(
                                   'Save',
                                   style: TextStyle(
-                                      fontSize: 30, fontFamily: 'chubby'),
+                                      fontSize: 20, fontFamily: 'Comfortaa-Bold'),
                                 ),
                               ),
                             ),

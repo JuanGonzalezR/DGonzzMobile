@@ -119,3 +119,203 @@ class ListViewDataSql extends StatelessWidget {
 }
 
 //*********************************************************************************************************************/
+
+class BottonCreateNewRegisterSql extends StatelessWidget {
+  const BottonCreateNewRegisterSql({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final rsp = Responsive(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 85, 130, 228),
+            maxRadius: 30,
+            child: IconButton(
+                onPressed: () {
+                  bottonSheetNewRegister(context, rsp);
+                },
+                icon: const Icon(
+                  Icons.add_circle_sharp,
+                  color: Colors.white,
+                  size: 30,
+                )),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> bottonSheetNewRegister(BuildContext context, Responsive rsp) {
+    return showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+              padding: EdgeInsets.all(rsp.dp(3)),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Register the activity here',
+                              style: TextStyle(
+                                  fontFamily: 'Comfortaa-Bold',
+                                  fontSize: 18,
+                                  color: Colors.black54),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: rsp.dp(5)),
+                        DesignTextField(
+                            "",
+                            'Activity name',
+                            Icons.tips_and_updates_rounded,
+                            Colors.white,
+                            const Color.fromARGB(255, 211, 211, 211),
+                            Colors.white,
+                            (v) {},
+                            () {},
+                            TextInputType.emailAddress,
+                            'Comfortaa-Light',
+                            false),
+                        SizedBox(height: rsp.dp(2)),
+                        DesignTextField(
+                            "",
+                            'Activity description',
+                            Icons.description,
+                            Colors.white,
+                            const Color.fromARGB(255, 211, 211, 211),
+                            Colors.white,
+                            (v) {},
+                            () {},
+                            TextInputType.emailAddress,
+                            'Comfortaa-Light',
+                            false),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: const [
+                            CircleAvatar(
+                            backgroundColor: Color.fromARGB(255, 211, 211, 211),
+                            child: Icon(
+                              Icons.playlist_add_check_circle,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 18),
+                          Text('Activity Status', style: TextStyle(fontFamily: 'Comfortaa-Bold', fontSize: 16, color: Colors.black54),)
+                          ],
+                        ),
+                        const RadioButtonSql(),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(12), // <-- Radius
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      fontSize: 20, fontFamily: 'Comfortaa-Bold'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+              )
+              
+            ));
+  }
+}
+
+//*********************************************************************************************************************/
+
+
+enum SingingCharacter { completed, finished, cancelled }
+
+class RadioButtonSql extends StatefulWidget {
+  const RadioButtonSql({super.key});
+
+  @override
+  State<RadioButtonSql> createState() => _RadioButtonSqlState();
+}
+
+class _RadioButtonSqlState extends State<RadioButtonSql> {
+  SingingCharacter? _character = SingingCharacter.completed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Completed'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.completed,
+            groupValue: _character,
+            onChanged: (SingingCharacter? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Finished'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.finished,
+            groupValue: _character,
+            onChanged: (SingingCharacter? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Cancelled'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.cancelled,
+            groupValue: _character,
+            onChanged: (SingingCharacter? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -3,8 +3,12 @@ import 'dart:ui';
 
 import 'dart:math' as math;
 
+import '../model/entities/ent_activity.dart';
+import '../model/repositories/services/firebase_service.dart';
+
 part 'responsive.dart';
 part 'routes.dart';
+part 'navegar_fadein.dart';
 
 part '../view/login/login.dart';
 part '../view/login/widgets.dart';

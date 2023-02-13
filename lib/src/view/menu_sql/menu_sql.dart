@@ -9,9 +9,14 @@ class ViewMenuSql extends StatelessWidget {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Stack(
-          children: const [
-            HeaderMenuSql()
-          ],
+          children: const [HeaderMenuSql()],
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [BottonCreateNewRegisterSql()],
         ),
       ),
     );

@@ -415,7 +415,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 255, 214, 64),
               onTap: () {
-                Navigator.pushNamed(context, routesFromInit.routeMenuFirebase);
+                Navigator.push(context,navegarFadeIn(context, const ViewMenuFirebase()));
                 debugPrint('First Button');
               },
               routeImg: 'asset/image/firebase.png',
@@ -426,7 +426,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 255, 82, 82),
               onTap: () {
-                Navigator.pushNamed(context, routesFromInit.routeMenuApi);
+                Navigator.push(context,navegarFadeIn(context, const ViewMenuApi()));
                 debugPrint('Second Button');
               },
               routeImg: 'asset/image/api.png',
@@ -438,7 +438,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 105, 240, 175),
               onTap: () {
-                Navigator.pushNamed(context, routesFromInit.routeMenuBloc);
+                Navigator.push(context,navegarFadeIn(context, const ViewMenuBloc()));
                 debugPrint('Third Button');
               },
               routeImg: 'asset/image/bloc.png',
@@ -448,7 +448,7 @@ class TableMenuOptions extends StatelessWidget {
           DesingCardView(
               color: const Color.fromARGB(200, 68, 137, 255),
               onTap: () {
-                Navigator.pushNamed(context, routesFromInit.routeMenuSql);
+                Navigator.push(context,navegarFadeIn(context, const ViewMenuSql()));
                 debugPrint('Fourth Button');
               },
               routeImg: 'asset/image/bd.png',

@@ -366,7 +366,7 @@ class MyButtonLogin extends StatelessWidget {
               textStyle: const TextStyle(fontSize: 20),
             ),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, routesFromInit.routeMenu);
+              Navigator.pushReplacement(context, navegarFadeIn(context, const ViewMenu()));
             },
             child: const Text('Continue', style: TextStyle(fontFamily: 'Comfortaa-Light'),),
           ),
