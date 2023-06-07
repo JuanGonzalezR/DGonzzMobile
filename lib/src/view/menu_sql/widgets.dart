@@ -2,12 +2,39 @@ part of '../../util/views_import.dart';
 
 //*********************************************************************************************************************/
 
-class HeaderMenuSql extends StatelessWidget {
+class HeaderMenuSql extends StatefulWidget {
   const HeaderMenuSql({super.key});
+
+  @override
+  State<HeaderMenuSql> createState() => _HeaderMenuSqlState();
+}
+
+class _HeaderMenuSqlState extends State<HeaderMenuSql>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final rsp = Responsive(context);
+    final crud = EntActivityCRUD();
+    final bloc = Provider.ofSQFliteBloc(context);
     return SizedBox(
       height: double.infinity,
       width: double.infinity,
@@ -20,12 +47,13 @@ class HeaderMenuSql extends StatelessWidget {
                 width: double.infinity,
                 height: rsp.hp(37),
                 decoration: const BoxDecoration(
-                    color:  Color.fromARGB(200, 68, 137, 255)),
+                    color: Color.fromARGB(200, 68, 137, 255)),
                 child: Center(
                   child: Image.asset(
-                      width: rsp.dp(20),
-                      height: rsp.dp(20),
-                      'asset/image/bd.png',),
+                    width: rsp.dp(20),
+                    height: rsp.dp(20),
+                    'asset/image/bd.png',
+                  ),
                 ),
               ),
             ),
@@ -65,67 +93,152 @@ class HeaderMenuSql extends StatelessWidget {
             ),
           ),
           const IconBackMenu(),
-          const ListViewDataSql()
+          Positioned(
+              top: rsp.hp(5.7),
+              right: rsp.wp(5),
+              child: IconButton(
+                  onPressed: () {
+                    // showNotifyLoading(() {
+                    //   Timer.run(() {
+                    //     crud.deleteAllActivity();
+                    //     setState(() {});
+                    //   });
+                    // });
+
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return alertDialogProgress(context, 'Deleting data..',
+                              'Wait a moment please...');
+                        });
+
+                    Future.delayed(const Duration(seconds: 3), () {
+                      setState(() {
+                        crud.deleteAllActivity();
+                        setState(() {});
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
+                  icon: Icon(
+                    Icons.delete_forever,
+                    size: rsp.dp(4),
+                    color: Colors.white,
+                  ))),
+          ListViewDataSql(bloc: bloc, entActivity: crud, rsp: rsp),
         ],
       ),
     );
   }
 }
 
-
-
 //*********************************************************************************************************************/
 
 class ListViewDataSql extends StatelessWidget {
-  const ListViewDataSql({super.key});
+  final Responsive rsp;
+  final EntActivityCRUD entActivity;
+  final SQFliteBloc bloc;
+
+  const ListViewDataSql(
+      {Key? key,
+      required this.rsp,
+      required this.entActivity,
+      required this.bloc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final rsp = Responsive(context);
-    final List<String> items = List<String>.generate(20, (i) => '$i');
+    //final List<String> items = List<String>.generate(20, (i) => '$i');
     return Container(
         margin:
             EdgeInsets.only(left: rsp.wp(4), right: rsp.wp(4), top: rsp.hp(35)),
         child: ScrollConfiguration(
-          behavior: MyBehavior(),
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 0, bottom: 5),
-            physics: const BouncingScrollPhysics(),
-            itemCount: 15,
-            itemBuilder: (context, i) {
-              return Card(
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
+            behavior: MyBehavior(), child: loadActivitiesSQLite(entActivity)));
+  }
+}
+
+Widget loadActivitiesSQLite(EntActivityCRUD crud) {
+  return FutureBuilder(
+      future: crud.loadActivities(),
+      builder: ((context, AsyncSnapshot<List<EntExportActivity>> snapshot) {
+        if (snapshot.hasData) {
+          List<EntExportActivity> data = snapshot.data!;
+          if (data.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.only(top: 0, bottom: 5),
+              physics: const BouncingScrollPhysics(),
+              itemCount: data.length,
+              itemBuilder: (context, i) {
+                return Card(
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                  leading: CircleAvatar(
-                    backgroundColor: const Color.fromARGB(255, 211, 211, 211),
-                    child: Text(
-                      items[i],
-                      style: const TextStyle(color: Colors.black),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: ListTile(
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    leading: circleLeading(data[i].actStatus),
+                    title: Text(
+                      data[i].actName,
+                      style: const TextStyle(fontFamily: 'Comfortaa-Bold'),
                     ),
+                    subtitle: Text(data[i].actDescription,
+                        style: const TextStyle(fontFamily: 'Comfortaa-Light')),
+                    trailing: const Icon(
+                      Icons.delete_sweep_rounded,
+                    ),
+                    onTap: () {},
                   ),
-                  title: Text('Item ${items[i]}'),
-                  subtitle: const Text('Item description'),
-                  trailing: const Icon(Icons.cleaning_services),
-                  onTap: () {},
-                ),
-              );
-            },
-          ),
-        ));
+                );
+              },
+            );
+          }
+        } else {
+          return const Center(
+              child: Text("No data to view",
+                  style: TextStyle(
+                      fontFamily: 'ComickBook_Simple', color: Colors.black54)));
+        }
+      }));
+}
+
+Widget circleLeading(String data) {
+  if (data == "Completed") {
+    return const CircleAvatar(
+      backgroundColor: Color.fromARGB(255, 59, 74, 206),
+      child: Icon(Icons.beenhere_rounded),
+    );
+  } else if (data == "Finished") {
+    return const CircleAvatar(
+      backgroundColor: Color.fromARGB(162, 223, 240, 77),
+      child: Icon(Icons.workspace_premium),
+    );
+  } else {
+    return const CircleAvatar(
+      backgroundColor: Color.fromARGB(158, 223, 60, 60),
+      child: Icon(Icons.work_off),
+    );
   }
 }
 
 //*********************************************************************************************************************/
 
-class BottonCreateNewRegisterSql extends StatelessWidget {
+class BottonCreateNewRegisterSql extends StatefulWidget {
   const BottonCreateNewRegisterSql({super.key});
 
   @override
+  State<BottonCreateNewRegisterSql> createState() =>
+      _BottonCreateNewRegisterSqlState();
+}
+
+class _BottonCreateNewRegisterSqlState
+    extends State<BottonCreateNewRegisterSql> {
+  @override
   Widget build(BuildContext context) {
     final rsp = Responsive(context);
+    final crud = EntActivityCRUD();
+    final sqfl = SQFliteBloc();
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: ClipOval(
@@ -136,7 +249,7 @@ class BottonCreateNewRegisterSql extends StatelessWidget {
             maxRadius: 30,
             child: IconButton(
                 onPressed: () {
-                  bottonSheetNewRegister(context, rsp);
+                  bottonSheetNewRegister(context, rsp, crud, sqfl);
                 },
                 icon: const Icon(
                   Icons.add_circle_sharp,
@@ -149,17 +262,18 @@ class BottonCreateNewRegisterSql extends StatelessWidget {
     );
   }
 
-  Future<dynamic> bottonSheetNewRegister(BuildContext context, Responsive rsp) {
+  Future<dynamic> bottonSheetNewRegister(BuildContext context, Responsive rsp,
+      EntActivityCRUD crud, SQFliteBloc sqfl) {
     return showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
         context: context,
         isScrollControlled: true,
         builder: (context) => Padding(
-              padding: EdgeInsets.all(rsp.dp(3)),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
+            padding: EdgeInsets.all(rsp.dp(3)),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -184,68 +298,95 @@ class BottonCreateNewRegisterSql extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: rsp.dp(5)),
-                        DesignTextField(
-                            "",
-                            'Activity name',
-                            Icons.tips_and_updates_rounded,
-                            Colors.white,
-                            const Color.fromARGB(255, 211, 211, 211),
-                            Colors.white,
-                            (v) {},
-                            () {},
-                            TextInputType.emailAddress,
-                            'Comfortaa-Light',
-                            false),
+                        StreamBuilder(
+                            stream: sqfl.actNameStream,
+                            builder: (context, snapshot) {
+                              return DesignTextField(
+                                  "",
+                                  'Activity name',
+                                  Icons.tips_and_updates_rounded,
+                                  Colors.white,
+                                  const Color.fromARGB(255, 211, 211, 211),
+                                  Colors.white, (v) {
+                                sqfl.changeActName(v);
+                              }, () {}, TextInputType.emailAddress,
+                                  'Comfortaa-Light', false);
+                            }),
                         SizedBox(height: rsp.dp(2)),
-                        DesignTextField(
-                            "",
-                            'Activity description',
-                            Icons.description,
-                            Colors.white,
-                            const Color.fromARGB(255, 211, 211, 211),
-                            Colors.white,
-                            (v) {},
-                            () {},
-                            TextInputType.emailAddress,
-                            'Comfortaa-Light',
-                            false),
+                        StreamBuilder(
+                            stream: sqfl.actDescripStream,
+                            builder: (context, snapshot) {
+                              return DesignTextField(
+                                  "",
+                                  'Activity description',
+                                  Icons.description,
+                                  Colors.white,
+                                  const Color.fromARGB(255, 211, 211, 211),
+                                  Colors.white, (v) {
+                                sqfl.changeActDescrip(v);
+                              }, () {}, TextInputType.emailAddress,
+                                  'Comfortaa-Light', false);
+                            }),
                         const SizedBox(height: 20),
                         Row(
                           children: const [
                             CircleAvatar(
-                            backgroundColor: Color.fromARGB(255, 211, 211, 211),
-                            child: Icon(
-                              Icons.playlist_add_check_circle,
-                              color: Colors.white,
+                              backgroundColor:
+                                  Color.fromARGB(255, 211, 211, 211),
+                              child: Icon(
+                                Icons.playlist_add_check_circle,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 18),
-                          Text('Activity Status', style: TextStyle(fontFamily: 'Comfortaa-Bold', fontSize: 16, color: Colors.black54),)
+                            SizedBox(width: 18),
+                            Text(
+                              'Activity Status',
+                              style: TextStyle(
+                                  fontFamily: 'Comfortaa-Bold',
+                                  fontSize: 16,
+                                  color: Colors.black54),
+                            )
                           ],
                         ),
-                        const RadioButtonSql(),
+                        RadioButtonSql(bloc: sqfl),
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(12), // <-- Radius
-                                ),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      fontSize: 20, fontFamily: 'Comfortaa-Bold'),
-                                ),
-                              ),
-                            ),
+                            StreamBuilder(
+                                stream: sqfl.submitValid,
+                                builder: (context, snapshot) {
+                                  return ElevatedButton(
+                                    onPressed: snapshot.hasData
+                                        ? () {
+                                            _buttonAddAct(sqfl, crud);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ViewMenuSql()),
+                                            );
+                                            //int res = await crud.countActivities();
+                                          }
+                                        : null,
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            12), // <-- Radius
+                                      ),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: Text(
+                                        'Save',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'Comfortaa-Bold'),
+                                      ),
+                                    ),
+                                  );
+                                }),
                           ],
                         )
                       ],
@@ -254,68 +395,96 @@ class BottonCreateNewRegisterSql extends StatelessWidget {
                   const SizedBox(height: 10),
                 ],
               ),
-              )
-              
-            ));
+            )));
   }
+}
+
+_buttonAddAct(SQFliteBloc bloc, EntActivityCRUD activityCRUD) {
+  String? actName = bloc.getActNameBloc;
+  String? actDescrip = bloc.getActDescripBloc;
+  String? actStatus = bloc.getActStatusBloc;
+
+  actStatus ??= 'SingingCharacter.completed';
+
+  if (actStatus.contains('completed')) actStatus = 'Completed';
+  if (actStatus.contains('finished')) actStatus = 'Finished';
+  if (actStatus.contains('cancelled')) actStatus = 'Cancelled';
+
+  final entActivity = EntExportActivity(
+      actName: actName, actDescription: actDescrip, actStatus: actStatus);
+
+  activityCRUD.insertActivity(entActivity);
 }
 
 //*********************************************************************************************************************/
 
-
 enum SingingCharacter { completed, finished, cancelled }
 
 class RadioButtonSql extends StatefulWidget {
-  const RadioButtonSql({super.key});
+  final SQFliteBloc bloc;
+
+  const RadioButtonSql({Key? key, required this.bloc}) : super(key: key);
 
   @override
-  State<RadioButtonSql> createState() => _RadioButtonSqlState();
+  RadioButtonSqlState createState() => RadioButtonSqlState();
 }
 
-class _RadioButtonSqlState extends State<RadioButtonSql> {
+class RadioButtonSqlState extends State<RadioButtonSql> {
   SingingCharacter? _character = SingingCharacter.completed;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Completed'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.completed,
-            groupValue: _character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Finished'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.finished,
-            groupValue: _character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Cancelled'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.cancelled,
-            groupValue: _character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-      ],
-    );
+    return StreamBuilder(
+        stream: widget.bloc.actStatusStream,
+        builder: ((context, snapshot) {
+          return Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('Completed'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.completed,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      widget.bloc.changeActStatus(value.toString());
+                      _character = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Finished'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.finished,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      widget.bloc.changeActStatus(value.toString());
+                      _character = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Cancelled'),
+                leading: Radio<SingingCharacter>(
+                  value: SingingCharacter.cancelled,
+                  groupValue: _character,
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      widget.bloc.changeActStatus(value.toString());
+                      _character = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          );
+        }));
   }
 }
+
+
+
+//*********************************************************************************************************************/
+

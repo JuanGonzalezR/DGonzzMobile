@@ -1,6 +1,14 @@
 part of '../util/views_import.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
+int _backgroundColor = 0x42000000;
+int _seconds = 2;
+bool _clickClose = true;
+bool _allowClick = true;
+bool _crossPage = true;
+int _animationMilliseconds = 350;
+int _animationReverseMilliseconds = 350;
+BackButtonBehavior _backButtonBehavior = BackButtonBehavior.none;
 
 //*********************************************************************************************************************/
 
@@ -17,11 +25,42 @@ class IconBackMenu extends StatelessWidget {
         icon: Icon(Icons.keyboard_double_arrow_left_rounded,
             size: rsp.dp(5), color: Colors.white),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const ViewMenu()),
+              (Route<dynamic> route) => false);
         },
       ),
     );
   }
+}
+
+//*********************************************************************************************************************/
+
+showNotifyLoading(Function()? functionClose) {
+  return BotToast.showLoading(
+      clickClose: _clickClose,
+      allowClick: _allowClick,
+      crossPage: _crossPage,
+      backButtonBehavior: _backButtonBehavior,
+      animationDuration: Duration(milliseconds: _animationMilliseconds),
+      animationReverseDuration:
+          Duration(milliseconds: _animationReverseMilliseconds),
+      duration: Duration(
+        seconds: _seconds,
+      ),
+      backgroundColor: Color(_backgroundColor),
+      onClose: functionClose);
+}
+
+//*********************************************************************************************************************/
+
+Widget snackBar(BuildContext context, String text) {
+  final snackBar = SnackBar(
+      content:
+          Text(text, style: const TextStyle(fontFamily: 'Comfortaa-Light')));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+  return snackBar;
 }
 
 //*********************************************************************************************************************/
@@ -32,6 +71,31 @@ class MyBehavior extends ScrollBehavior {
       BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
+}
+
+//*********************************************************************************************************************/
+
+Widget alertDialogProgress(
+    BuildContext context, String title, String subtitle) {
+  return AlertDialog(
+    title: Text(title),
+    titleTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        fontSize: 20,
+        fontFamily: 'Comfortaa-Light'),
+    actionsOverflowButtonSpacing: 20,
+    content: Row(children: [
+      const CircularProgressIndicator(),
+      const SizedBox(
+        width: 10,
+      ),
+      Text(
+        subtitle,
+        style: const TextStyle(fontFamily: 'Comfortaa-Light'),
+      ),
+    ]),
+  );
 }
 
 //*********************************************************************************************************************/

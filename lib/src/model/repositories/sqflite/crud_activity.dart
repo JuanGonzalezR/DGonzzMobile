@@ -7,6 +7,20 @@ class EntActivityCRUD {
 
   Future<void> insertActivity(EntExportActivity entActivity) async {
     final Database db = await dbase.database;
+    //final activities = await db.query('activity');
+
+    /*if (activities.isNotEmpty) {
+      await db.execute("DELETE from 'activity'");
+      await db.execute(
+          "UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'activity'");
+    }*/
+
+    await db.insert('activity', entActivity.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+    Future<void> deleteAllActivity() async {
+    final Database db = await dbase.database;
     final activities = await db.query('activity');
 
     if (activities.isNotEmpty) {
@@ -14,9 +28,6 @@ class EntActivityCRUD {
       await db.execute(
           "UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'activity'");
     }
-
-    await db.insert('activity', entActivity.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> countActivities() async {
