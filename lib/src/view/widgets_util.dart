@@ -33,6 +33,38 @@ class IconBackMenu extends StatelessWidget {
     );
   }
 }
+//*********************************************************************************************************************/
+
+showMyDialog(BuildContext context, String title, String subtitle,
+    Function()? onPressedCan, Function()? onPressedOk) {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(subtitle),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: onPressedCan,
+            child: const Text('Close'),
+          ),
+          TextButton(
+            onPressed: onPressedOk,
+            child: const Text('Accept'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
 //*********************************************************************************************************************/
 

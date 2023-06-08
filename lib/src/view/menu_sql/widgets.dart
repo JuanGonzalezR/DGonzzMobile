@@ -94,38 +94,50 @@ class _HeaderMenuSqlState extends State<HeaderMenuSql>
           ),
           const IconBackMenu(),
           Positioned(
-              top: rsp.hp(5.7),
+              top: rsp.hp(5.9),
               right: rsp.wp(5),
-              child: IconButton(
-                  onPressed: () {
-                    // showNotifyLoading(() {
-                    //   Timer.run(() {
-                    //     crud.deleteAllActivity();
-                    //     setState(() {});
-                    //   });
-                    // });
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(
+                      fontSize: 15, fontFamily: 'Comfortaa-Light'),
+                ),
+                onPressed: () {
+                  crud.countActivities().then((value) => {
+                        if (value > 0)
+                          {
+                            showMyDialog(context, 'Alert delete',
+                                'Do you want to delete all data?', (() {
+                              Navigator.pop(context);
+                            }), (() {
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return alertDialogProgress(
+                                        context,
+                                        'Deleting data..',
+                                        'Wait a moment please...');
+                                  });
 
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return alertDialogProgress(context, 'Deleting data..',
-                              'Wait a moment please...');
-                        });
-
-                    Future.delayed(const Duration(seconds: 3), () {
-                      setState(() {
-                        crud.deleteAllActivity();
-                        setState(() {});
-                        Navigator.pop(context);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                setState(() {
+                                  crud.deleteAllActivity();
+                                  setState(() {});
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (_) => const ViewMenuSql()),
+                                      (Route<dynamic> route) => false);
+                                });
+                              });
+                            }))
+                          }
+                        else
+                          {snackBar(context, 'No data to delete')}
                       });
-                    });
-                  },
-                  icon: Icon(
-                    Icons.delete_forever,
-                    size: rsp.dp(4),
-                    color: Colors.white,
-                  ))),
+                },
+                child: const Text('Delete all'),
+              )),
           ListViewDataSql(bloc: bloc, entActivity: crud, rsp: rsp),
         ],
       ),
@@ -135,7 +147,7 @@ class _HeaderMenuSqlState extends State<HeaderMenuSql>
 
 //*********************************************************************************************************************/
 
-class ListViewDataSql extends StatelessWidget {
+class ListViewDataSql extends StatefulWidget {
   final Responsive rsp;
   final EntActivityCRUD entActivity;
   final SQFliteBloc bloc;
@@ -148,59 +160,132 @@ class ListViewDataSql extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //final List<String> items = List<String>.generate(20, (i) => '$i');
-    return Container(
-        margin:
-            EdgeInsets.only(left: rsp.wp(4), right: rsp.wp(4), top: rsp.hp(35)),
-        child: ScrollConfiguration(
-            behavior: MyBehavior(), child: loadActivitiesSQLite(entActivity)));
-  }
+  State<ListViewDataSql> createState() => _ListViewDataSqlState();
 }
 
-Widget loadActivitiesSQLite(EntActivityCRUD crud) {
-  return FutureBuilder(
-      future: crud.loadActivities(),
-      builder: ((context, AsyncSnapshot<List<EntExportActivity>> snapshot) {
-        if (snapshot.hasData) {
-          List<EntExportActivity> data = snapshot.data!;
-          if (data.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
-              padding: const EdgeInsets.only(top: 0, bottom: 5),
-              physics: const BouncingScrollPhysics(),
-              itemCount: data.length,
-              itemBuilder: (context, i) {
-                return Card(
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: ListTile(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    leading: circleLeading(data[i].actStatus),
-                    title: Text(
-                      data[i].actName,
-                      style: const TextStyle(fontFamily: 'Comfortaa-Bold'),
-                    ),
-                    subtitle: Text(data[i].actDescription,
-                        style: const TextStyle(fontFamily: 'Comfortaa-Light')),
-                    trailing: const Icon(
-                      Icons.delete_sweep_rounded,
-                    ),
-                    onTap: () {},
-                  ),
-                );
-              },
-            );
-          }
-        } else {
-          return const Center(
-              child: Text("No data to view",
-                  style: TextStyle(
-                      fontFamily: 'ComickBook_Simple', color: Colors.black54)));
-        }
-      }));
+class _ListViewDataSqlState extends State<ListViewDataSql> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(
+            left: widget.rsp.wp(4),
+            right: widget.rsp.wp(4),
+            top: widget.rsp.hp(35)),
+        child: ScrollConfiguration(
+            behavior: MyBehavior(),
+            child: FutureBuilder(
+                future: widget.entActivity.loadActivities(),
+                builder: ((context,
+                    AsyncSnapshot<List<EntExportActivity>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<EntExportActivity> data = snapshot.data!;
+                    if (data.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return ListView.builder(
+                        padding: const EdgeInsets.only(top: 0, bottom: 5),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: data.length,
+                        itemBuilder: (context, i) {
+                          return Card(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            child: ListTile(
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              leading: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  circleLeading(data[i].actStatus),
+                                ],
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    data[i].actName,
+                                    style: const TextStyle(
+                                        fontFamily: 'Comfortaa-Bold'),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  Text(data[i].actDescription,
+                                      style: const TextStyle(
+                                          fontFamily: 'Comfortaa-Light')),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                              trailing: SizedBox(
+                                width: 100,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              widget.entActivity.deleteActivity(
+                                                  data[i].actId);
+                                              setState(() {});
+                                            },
+                                            icon: const Icon(
+                                                Icons.delete_sweep_rounded)),
+                                        IconButton(
+                                            onPressed: () {
+                                              showMyDialogUpdate(
+                                                  context,
+                                                  widget.bloc,
+                                                  'Update data',
+                                                  data[i], () {
+                                                Navigator.pop(context);
+                                              }, () {
+                                                _buttonUpdateAct(
+                                                    widget.bloc,
+                                                    widget.entActivity,
+                                                    data[i].actId);
+                                                widget.bloc.changeActNameUpd('');
+                                                widget.bloc.changeActDescripUpd('');
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                        MaterialPageRoute(
+                                                            builder: (_) =>
+                                                                const ViewMenuSql()),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
+                                              });
+                                              setState(() {});
+                                            },
+                                            icon: const Icon(Icons
+                                                .system_update_alt_rounded))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {},
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    return const Center(
+                        child: Text("No data to view",
+                            style: TextStyle(
+                                fontFamily: 'ComickBook_Simple',
+                                color: Colors.black54)));
+                  }
+                }))));
+  }
 }
 
 Widget circleLeading(String data) {
@@ -220,6 +305,70 @@ Widget circleLeading(String data) {
       child: Icon(Icons.work_off),
     );
   }
+}
+
+showMyDialogUpdate(BuildContext context, SQFliteBloc bloc, String title,
+    EntExportActivity data, Function()? onPressedCan, Function()? onPressedOk) {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              const SizedBox(height: 10),
+              StreamBuilder(
+                  stream: bloc.actDescripUpdStream,
+                  builder: (context, snapshot) {
+                    return DesignTextField(
+                        "Name",
+                        data.actName,
+                        Icons.tips_and_updates_rounded,
+                        Colors.white,
+                        const Color.fromARGB(255, 211, 211, 211),
+                        Colors.white, (v) {
+                      bloc.changeActNameUpd(v);
+                    }, () {}, TextInputType.emailAddress, 'Comfortaa-Light',
+                        false);
+                  }),
+              const SizedBox(height: 10),
+              StreamBuilder(
+                  stream: bloc.actDescripUpdStream,
+                  builder: (context, snapshot) {
+                    return DesignTextField(
+                        "Description",
+                        data.actDescription,
+                        Icons.description,
+                        Colors.white,
+                        const Color.fromARGB(255, 211, 211, 211),
+                        Colors.white, (v) {
+                      bloc.changeActDescripUpd(v);
+                    }, () {}, TextInputType.emailAddress, 'Comfortaa-Light',
+                        false);
+                  }),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: onPressedCan,
+            child: const Text('Cancel'),
+          ),
+          StreamBuilder(
+            stream: bloc.submitValidUpd,
+            builder: (context, snapshot) {
+              return TextButton(
+                onPressed: snapshot.hasData ? onPressedOk : null,
+                child: const Text('Update'),
+              );
+            }
+          ),
+        ],
+      );
+    },
+  );
 }
 
 //*********************************************************************************************************************/
@@ -414,6 +563,25 @@ _buttonAddAct(SQFliteBloc bloc, EntActivityCRUD activityCRUD) {
       actName: actName, actDescription: actDescrip, actStatus: actStatus);
 
   activityCRUD.insertActivity(entActivity);
+}
+
+_buttonUpdateAct(SQFliteBloc bloc, EntActivityCRUD activityCRUD, int? id) {
+  String? actNameUpd = bloc.getActNameUpdBloc;
+  String? actDescripUpd = bloc.getActDescripUpdBloc;
+  String? actStatusUpd = bloc.getActStatusBloc;
+
+  actStatusUpd ??= 'SingingCharacter.completed';
+
+  if (actStatusUpd.contains('completed')) actStatusUpd = 'Completed';
+  if (actStatusUpd.contains('finished')) actStatusUpd = 'Finished';
+  if (actStatusUpd.contains('cancelled')) actStatusUpd = 'Cancelled';
+
+  final entActivity = EntExportActivity(
+      actName: actNameUpd,
+      actDescription: actDescripUpd,
+      actStatus: actStatusUpd);
+
+  activityCRUD.updateActivity(id, entActivity);
 }
 
 //*********************************************************************************************************************/
