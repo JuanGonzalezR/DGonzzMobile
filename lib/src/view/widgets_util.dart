@@ -26,7 +26,7 @@ class IconBackMenu extends StatelessWidget {
             size: rsp.dp(5), color: Colors.white),
         onPressed: () {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const ViewMenu()),
+              navegarFadeIn(context, const ViewMenu()),
               (Route<dynamic> route) => false);
         },
       ),

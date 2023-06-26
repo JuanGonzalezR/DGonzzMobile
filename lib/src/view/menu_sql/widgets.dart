@@ -125,8 +125,8 @@ class _HeaderMenuSqlState extends State<HeaderMenuSql>
                                   crud.deleteAllActivity();
                                   setState(() {});
                                   Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (_) => const ViewMenuSql()),
+                                      navegarFadeIn(
+                                          context, const ViewMenuSql()),
                                       (Route<dynamic> route) => false);
                                 });
                               });
@@ -251,13 +251,14 @@ class _ListViewDataSqlState extends State<ListViewDataSql> {
                                                     widget.bloc,
                                                     widget.entActivity,
                                                     data[i].actId);
-                                                widget.bloc.changeActNameUpd('');
-                                                widget.bloc.changeActDescripUpd('');
+                                                widget.bloc
+                                                    .changeActNameUpd('');
+                                                widget.bloc
+                                                    .changeActDescripUpd('');
                                                 Navigator.of(context)
                                                     .pushAndRemoveUntil(
-                                                        MaterialPageRoute(
-                                                            builder: (_) =>
-                                                                const ViewMenuSql()),
+                                                        navegarFadeIn(context,
+                                                            const ViewMenuSql()),
                                                         (Route<dynamic>
                                                                 route) =>
                                                             false);
@@ -357,14 +358,13 @@ showMyDialogUpdate(BuildContext context, SQFliteBloc bloc, String title,
             child: const Text('Cancel'),
           ),
           StreamBuilder(
-            stream: bloc.submitValidUpd,
-            builder: (context, snapshot) {
-              return TextButton(
-                onPressed: snapshot.hasData ? onPressedOk : null,
-                child: const Text('Update'),
-              );
-            }
-          ),
+              stream: bloc.submitValidUpd,
+              builder: (context, snapshot) {
+                return TextButton(
+                  onPressed: snapshot.hasData ? onPressedOk : null,
+                  child: const Text('Update'),
+                );
+              }),
         ],
       );
     },

@@ -204,7 +204,7 @@ class IconKing extends StatelessWidget {
 
 //******************************************************************************************************************** */
 
-class DesingCardView extends StatelessWidget {
+class DesignCardView extends StatelessWidget {
   final Color color;
   final Function()? onTap;
   final String routeImg;
@@ -212,7 +212,7 @@ class DesingCardView extends StatelessWidget {
   final String subtitle;
   final String description;
 
-  const DesingCardView({
+  const DesignCardView({
     super.key,
     required this.color,
     required this.onTap,
@@ -412,7 +412,7 @@ class TableMenuOptions extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(children: [
-          DesingCardView(
+          DesignCardView(
               color: const Color.fromARGB(200, 255, 214, 64),
               onTap: () {
                 Navigator.push(context,navegarFadeIn(context, const ViewMenuFirebase()));
@@ -423,7 +423,7 @@ class TableMenuOptions extends StatelessWidget {
               subtitle:
                   'Cloud platform for web and mobile application development',
               description: ''),
-          DesingCardView(
+          DesignCardView(
               color: const Color.fromARGB(200, 255, 82, 82),
               onTap: () {
                 Navigator.push(context,navegarFadeIn(context, const ViewMenuApi()));
@@ -435,7 +435,7 @@ class TableMenuOptions extends StatelessWidget {
               description: '')
         ]),
         TableRow(children: [
-          DesingCardView(
+          DesignCardView(
               color: const Color.fromARGB(200, 105, 240, 175),
               onTap: () {
                 Navigator.push(context,navegarFadeIn(context, const ViewMenuBloc()));
@@ -445,7 +445,7 @@ class TableMenuOptions extends StatelessWidget {
               title: 'BLoC',
               subtitle: 'Business Logic Component',
               description: ''),
-          DesingCardView(
+          DesignCardView(
               color: const Color.fromARGB(200, 68, 137, 255),
               onTap: () {
                 Navigator.push(context,navegarFadeIn(context, const ViewMenuSql()));

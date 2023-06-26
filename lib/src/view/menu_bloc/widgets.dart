@@ -20,12 +20,13 @@ class HeaderMenuBloc extends StatelessWidget {
                 width: double.infinity,
                 height: rsp.hp(37),
                 decoration: const BoxDecoration(
-                    color:  Color.fromARGB(200, 105, 240, 175)),
+                    color: Color.fromARGB(200, 105, 240, 175)),
                 child: Center(
                   child: Image.asset(
-                      width: rsp.dp(30),
-                      height: rsp.dp(30),
-                      'asset/image/bloc2.png',),
+                    width: rsp.dp(30),
+                    height: rsp.dp(30),
+                    'asset/image/bloc2.png',
+                  ),
                 ),
               ),
             ),
@@ -64,15 +65,12 @@ class HeaderMenuBloc extends StatelessWidget {
                       BorderRadius.vertical(top: Radius.circular(50))),
             ),
           ),
-          const IconBackMenu(),
-          const ListViewDataBloc()
+          const IconBackMenu()
         ],
       ),
     );
   }
 }
-
-
 
 //*********************************************************************************************************************/
 
@@ -98,7 +96,7 @@ class ListViewDataBloc extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: ListTile(
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   leading: CircleAvatar(
                     backgroundColor: const Color.fromARGB(255, 211, 211, 211),
                     child: Text(
@@ -119,3 +117,121 @@ class ListViewDataBloc extends StatelessWidget {
 }
 
 //*********************************************************************************************************************/
+
+//******************************************************************************************************************** */
+
+class DesignCardViewBloc extends StatelessWidget {
+  final Color color;
+  final Function()? onTap;
+  final String routeImg;
+  final String title;
+
+  const DesignCardViewBloc({
+    super.key,
+    required this.color,
+    required this.onTap,
+    required this.routeImg,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final rps = Responsive(context);
+    return InkResponse(
+      onTap: () {},
+      onLongPress: () {},
+      child: Padding(
+        padding: const EdgeInsets.all(9),
+        child: Container(
+          width: rps.wp(41),
+          height: rps.wp(32),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(24, 0, 0, 0), width: 1.5),
+            borderRadius: BorderRadius.circular(15),
+            color: const Color.fromARGB(83, 255, 255, 255),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      routeImg,
+                      width: rps.wp(20),
+                      height: rps.wp(20),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Text(title,
+                          style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 15,
+                              fontFamily: 'rimouski'))
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//******************************************************************************************************************** */
+
+class TableMenuOptionsBloc extends StatelessWidget {
+  const TableMenuOptionsBloc({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Table(
+      columnWidths: const <int, TableColumnWidth>{
+        0: IntrinsicColumnWidth(),
+        1: IntrinsicColumnWidth(),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(children: [
+          DesignCardViewBloc(
+            color: const Color.fromARGB(200, 255, 214, 64),
+            onTap: () {
+              debugPrint('First Button');
+            },
+            routeImg: 'asset/image/gym.png',
+            title: 'Gym',
+          ),
+          DesignCardViewBloc(
+            color: const Color.fromARGB(200, 255, 214, 64),
+            onTap: () {
+              debugPrint('First Button');
+            },
+            routeImg: 'asset/image/running.png',
+            title: 'Running',
+          ),
+        ]),
+        TableRow(children: [
+          DesignCardViewBloc(
+            color: const Color.fromARGB(200, 255, 214, 64),
+            onTap: () {
+              debugPrint('First Button');
+            },
+            routeImg: 'asset/image/struggle.png',
+            title: 'Struggle',
+          ),
+          DesignCardViewBloc(
+            color: const Color.fromARGB(200, 255, 214, 64),
+            onTap: () {
+              debugPrint('First Button');
+            },
+            routeImg: 'asset/image/yoga.png',
+            title: 'Yoga',
+          ),
+        ]),
+      ],
+    );
+  }
+}
