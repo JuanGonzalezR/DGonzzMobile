@@ -5,6 +5,7 @@ class ViewMenuBloc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final rsp = Responsive(context);
     return Scaffold(
       body: GestureDetector(
@@ -12,7 +13,9 @@ class ViewMenuBloc extends StatelessWidget {
         child: Stack(
           children: [
             const HeaderMenuBloc(),
+
             Positioned(left: rsp.wp(5), top: rsp.hp(35),child: const TableMenuOptionsBloc()),
+            Positioned(left: rsp.wp(12.5), top: rsp.hp(65),child: const DesignChart()),
           ],
         ),
       ),

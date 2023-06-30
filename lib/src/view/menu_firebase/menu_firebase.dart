@@ -8,17 +8,17 @@ class ViewMenuFirebase extends StatelessWidget {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Stack(
-          children: const [
+        child: const Stack(
+          children: [
             HeaderMenuFirebase()
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
+      floatingActionButton: const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [
+          children: [
             BottonCreateNewRegister()
           ],
         ),

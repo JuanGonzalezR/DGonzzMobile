@@ -8,8 +8,8 @@ class ViewMenuApi extends StatelessWidget {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Stack(
-          children: const [
+        child: const Stack(
+          children: [
             HeaderMenuApi()
           ],
         ),

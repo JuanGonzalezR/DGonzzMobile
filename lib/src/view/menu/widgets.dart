@@ -157,9 +157,9 @@ class TitleMenuWithLogo extends StatelessWidget {
         const SizedBox(
           width: 4,
         ),
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text("Juan Gonzalez",
                 style: TextStyle(color: Colors.white, fontFamily: 'rimouski')),
             Text("Flutter Project",

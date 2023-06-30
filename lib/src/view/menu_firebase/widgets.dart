@@ -92,8 +92,8 @@ class SearchContainer extends StatelessWidget {
           shape: const StadiumBorder(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: rsp.wp(5)),
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Expanded(
                   child: TextField(
                     style: TextStyle(color: Colors.black54, fontFamily: 'Comfortaa-Light', fontSize: 20),
@@ -136,8 +136,8 @@ class ExpandableCardContainer extends StatelessWidget {
       height: rsp.hp(12),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40), color: Colors.white),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           Text('Firebase',
               style: TextStyle(
                   color: Color.fromARGB(113, 0, 0, 0),
@@ -251,9 +251,9 @@ class BottonCreateNewRegister extends StatelessWidget {
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Register the task here',
                               style: TextStyle(
@@ -395,7 +395,7 @@ class ExpansionTileState extends State<ExpansionCard>
         _controller.drive(_backgroundColorTween.chain(_easeOutTween));
 
     _isExpanded =
-        PageStorage.of(context)?.readState(context) ?? widget.initiallyExpanded;
+        PageStorage.of(context).readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -416,7 +416,7 @@ class ExpansionTileState extends State<ExpansionCard>
           setState(() {});
         });
       }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
+      PageStorage.of(context).writeState(context, _isExpanded);
     });
     if (widget.onExpansionChanged != null)
       // ignore: curly_braces_in_flow_control_structures

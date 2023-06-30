@@ -434,9 +434,9 @@ class _BottonCreateNewRegisterSqlState
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Register the activity here',
                               style: TextStyle(
@@ -477,8 +477,8 @@ class _BottonCreateNewRegisterSqlState
                                   'Comfortaa-Light', false);
                             }),
                         const SizedBox(height: 20),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             CircleAvatar(
                               backgroundColor:
                                   Color.fromARGB(255, 211, 211, 211),

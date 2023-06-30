@@ -118,6 +118,54 @@ class ListViewDataBloc extends StatelessWidget {
 
 //*********************************************************************************************************************/
 
+class PieData {
+  final String xData;
+  final num? yData;
+  final String text;
+  PieData(this.xData, this.yData, this.text);
+}
+
+class DesignChart extends StatefulWidget {
+  const DesignChart({Key? key}) : super(key: key);
+
+  @override
+  State<DesignChart> createState() => _DesignChartState();
+}
+
+class _DesignChartState extends State<DesignChart> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<BlocProviderMenu, BlocProviderMenuState>(
+      builder: (context, state) {
+        int? gym = state.numGym;
+        int? running = state.numRunning;
+        int? struggle = state.numStruggle;
+        int? yoga = state.numYoga;
+
+        List<PieData> data = [
+          PieData('Gym', gym, gym.toString()),
+          PieData('Running', running, running.toString()),
+          PieData('Struggle', struggle, struggle.toString()),
+          PieData('Yoga', yoga, yoga.toString())
+        ];
+
+        return SfCircularChart(
+            legend: const Legend(isVisible: true),
+            series: <PieSeries<PieData, String>>[
+              PieSeries<PieData, String>(
+                  explode: true,
+                  explodeIndex: 0,
+                  dataSource: data,
+                  xValueMapper: (PieData data, _) => data.xData,
+                  yValueMapper: (PieData data, _) => data.yData,
+                  dataLabelMapper: (PieData data, _) => data.text,
+                  dataLabelSettings: const DataLabelSettings(isVisible: true)),
+            ]);
+      },
+    );
+  }
+}
+
 //******************************************************************************************************************** */
 
 class DesignCardViewBloc extends StatelessWidget {
@@ -137,43 +185,46 @@ class DesignCardViewBloc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rps = Responsive(context);
-    return InkResponse(
-      onTap: () {},
-      onLongPress: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(9),
-        child: Container(
-          width: rps.wp(41),
-          height: rps.wp(32),
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color.fromARGB(24, 0, 0, 0), width: 1.5),
-            borderRadius: BorderRadius.circular(15),
-            color: const Color.fromARGB(83, 255, 255, 255),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      routeImg,
-                      width: rps.wp(20),
-                      height: rps.wp(20),
-                    ),
+    return Material(
+      color: Colors.transparent,
+      child: InkResponse(
+        highlightShape: BoxShape.circle,
+        splashColor: Colors.grey.withOpacity(0.15),
+        highlightColor: Colors.grey.withOpacity(0.15),
+        hoverColor: Colors.grey.withOpacity(0.15),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(9),
+          child: Container(
+            width: rps.wp(41),
+            height: rps.wp(32),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: const Color.fromARGB(24, 0, 0, 0), width: 1.5),
+              borderRadius: BorderRadius.circular(15),
+              color: const Color.fromARGB(83, 255, 255, 255),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset(
+                    routeImg,
+                    width: rps.wp(20),
+                    height: rps.wp(20),
                   ),
-                  Column(
-                    children: [
-                      Text(title,
-                          style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 15,
-                              fontFamily: 'rimouski'))
-                    ],
-                  )
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  children: [
+                    Text(title,
+                        style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 15,
+                            fontFamily: 'rimouski'))
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -188,50 +239,59 @@ class TableMenuOptionsBloc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      columnWidths: const <int, TableColumnWidth>{
-        0: IntrinsicColumnWidth(),
-        1: IntrinsicColumnWidth(),
+    final mBloc = BlocProvider.of<BlocProviderMenu>(context);
+    return BlocBuilder<BlocProviderMenu, BlocProviderMenuState>(
+      builder: (context, state) {
+        return Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: IntrinsicColumnWidth(),
+            1: IntrinsicColumnWidth(),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            TableRow(children: [
+              DesignCardViewBloc(
+                color: const Color.fromARGB(200, 255, 214, 64),
+                onTap: () {
+                  int sum = (state.numGym == null) ? 0 : state.numGym!;
+                  mBloc.add(OnNumStatisGym(sum + 1));
+                },
+                routeImg: 'asset/image/gym.png',
+                title: 'Gym',
+              ),
+              DesignCardViewBloc(
+                color: const Color.fromARGB(200, 255, 214, 64),
+                onTap: () {
+                  int sum = (state.numRunning == null) ? 0 : state.numRunning!;
+                  mBloc.add(OnNumStatisRunning(sum + 1));
+                },
+                routeImg: 'asset/image/running.png',
+                title: 'Running',
+              ),
+            ]),
+            TableRow(children: [
+              DesignCardViewBloc(
+                color: const Color.fromARGB(200, 255, 214, 64),
+                onTap: () {
+                  int sum = (state.numStruggle == null) ? 0 : state.numStruggle!;
+                  mBloc.add(OnNumStatisStruggle(sum + 1));
+                },
+                routeImg: 'asset/image/struggle.png',
+                title: 'Struggle',
+              ),
+              DesignCardViewBloc(
+                color: const Color.fromARGB(200, 255, 214, 64),
+                onTap: () {
+                  int sum = (state.numYoga == null) ? 0 : state.numYoga!;
+                  mBloc.add(OnNumStatisYoga(sum + 1));
+                },
+                routeImg: 'asset/image/yoga.png',
+                title: 'Yoga',
+              ),
+            ]),
+          ],
+        );
       },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(children: [
-          DesignCardViewBloc(
-            color: const Color.fromARGB(200, 255, 214, 64),
-            onTap: () {
-              debugPrint('First Button');
-            },
-            routeImg: 'asset/image/gym.png',
-            title: 'Gym',
-          ),
-          DesignCardViewBloc(
-            color: const Color.fromARGB(200, 255, 214, 64),
-            onTap: () {
-              debugPrint('First Button');
-            },
-            routeImg: 'asset/image/running.png',
-            title: 'Running',
-          ),
-        ]),
-        TableRow(children: [
-          DesignCardViewBloc(
-            color: const Color.fromARGB(200, 255, 214, 64),
-            onTap: () {
-              debugPrint('First Button');
-            },
-            routeImg: 'asset/image/struggle.png',
-            title: 'Struggle',
-          ),
-          DesignCardViewBloc(
-            color: const Color.fromARGB(200, 255, 214, 64),
-            onTap: () {
-              debugPrint('First Button');
-            },
-            routeImg: 'asset/image/yoga.png',
-            title: 'Yoga',
-          ),
-        ]),
-      ],
     );
   }
 }
