@@ -159,6 +159,7 @@ class _DesignChartState extends State<DesignChart> {
                   xValueMapper: (PieData data, _) => data.xData,
                   yValueMapper: (PieData data, _) => data.yData,
                   dataLabelMapper: (PieData data, _) => data.text,
+                  animationDuration: 500,
                   dataLabelSettings: const DataLabelSettings(isVisible: true)),
             ]);
       },
@@ -173,6 +174,7 @@ class DesignCardViewBloc extends StatelessWidget {
   final Function()? onTap;
   final String routeImg;
   final String title;
+  final int num;
 
   const DesignCardViewBloc({
     super.key,
@@ -180,6 +182,7 @@ class DesignCardViewBloc extends StatelessWidget {
     required this.onTap,
     required this.routeImg,
     required this.title,
+    required this.num,
   });
 
   @override
@@ -187,46 +190,61 @@ class DesignCardViewBloc extends StatelessWidget {
     final rps = Responsive(context);
     return Material(
       color: Colors.transparent,
-      child: InkResponse(
-        highlightShape: BoxShape.circle,
-        splashColor: Colors.grey.withOpacity(0.15),
-        highlightColor: Colors.grey.withOpacity(0.15),
-        hoverColor: Colors.grey.withOpacity(0.15),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(9),
-          child: Container(
-            width: rps.wp(41),
-            height: rps.wp(32),
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: const Color.fromARGB(24, 0, 0, 0), width: 1.5),
-              borderRadius: BorderRadius.circular(15),
-              color: const Color.fromARGB(83, 255, 255, 255),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.asset(
-                    routeImg,
-                    width: rps.wp(20),
-                    height: rps.wp(20),
-                  ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: rps.wp(4),
+            top: rps.wp(4),
+            child: CircleAvatar(
+              radius: rps.wp(3),
+              backgroundColor: Colors.black54,
+              child: Text(num.toString(), style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'rimouski'),),
                 ),
-                Column(
+          ),
+          InkResponse(
+            highlightShape: BoxShape.circle,
+            splashColor: Colors.grey.withOpacity(0.15),
+            highlightColor: Colors.grey.withOpacity(0.15),
+            hoverColor: Colors.grey.withOpacity(0.15),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(9),
+              child: Container(
+                width: rps.wp(41),
+                height: rps.wp(32),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: const Color.fromARGB(24, 0, 0, 0), width: 1.5),
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromARGB(83, 255, 255, 255),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 15,
-                            fontFamily: 'rimouski'))
+                    Center(
+                      child: Image.asset(
+                        routeImg,
+                        width: rps.wp(20),
+                        height: rps.wp(20),
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Text(title,
+                            style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontFamily: 'rimouski'))
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -258,6 +276,7 @@ class TableMenuOptionsBloc extends StatelessWidget {
                 },
                 routeImg: 'asset/image/gym.png',
                 title: 'Gym',
+                num: (state.numGym == null) ? 0 : state.numGym!,
               ),
               DesignCardViewBloc(
                 color: const Color.fromARGB(200, 255, 214, 64),
@@ -267,17 +286,20 @@ class TableMenuOptionsBloc extends StatelessWidget {
                 },
                 routeImg: 'asset/image/running.png',
                 title: 'Running',
+                num: (state.numRunning == null) ? 0 : state.numRunning!,
               ),
             ]),
             TableRow(children: [
               DesignCardViewBloc(
                 color: const Color.fromARGB(200, 255, 214, 64),
                 onTap: () {
-                  int sum = (state.numStruggle == null) ? 0 : state.numStruggle!;
+                  int sum =
+                      (state.numStruggle == null) ? 0 : state.numStruggle!;
                   mBloc.add(OnNumStatisStruggle(sum + 1));
                 },
                 routeImg: 'asset/image/struggle.png',
                 title: 'Struggle',
+                num: (state.numStruggle == null) ? 0 : state.numStruggle!,
               ),
               DesignCardViewBloc(
                 color: const Color.fromARGB(200, 255, 214, 64),
@@ -287,6 +309,7 @@ class TableMenuOptionsBloc extends StatelessWidget {
                 },
                 routeImg: 'asset/image/yoga.png',
                 title: 'Yoga',
+                num: (state.numYoga == null) ? 0 : state.numYoga!,
               ),
             ]),
           ],
